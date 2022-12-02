@@ -2,11 +2,9 @@ import './App.css';
 
 function App() {
   return (
-    <div className='Parent'>
-      <div className='Table'>  
-        <h4 className='Title'>21 Black Jack</h4>
-        
-       </div>
+    <div className='parent'>
+      <h1 className='title'>Black Jack 21 </h1>
+      
     </div>
   );
 }
