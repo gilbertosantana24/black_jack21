@@ -1,8 +1,8 @@
 const Shape = {
-    Hearts:"hearts",
-    Diamonds:"diamonds",
-    Clubs:"clubs",
-    Spades:"spades"
+    H:"H",
+    D:"D",
+    C:"C",
+    S:"S"
 }
 
 const Value = {
