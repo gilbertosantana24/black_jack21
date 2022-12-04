@@ -1,23 +1,12 @@
 import "./App.css";
 import { useState, useRef, useEffect } from "react";
-import { buildMaze } from "./buildMaze";
-import { drawCard } from "./drawCard";
-
-const startGame = (
-  setMaze,
-  buildMaze,
-  setPlayerScore,
-  setDealerScore,
-  setPlayerBlock,
-  setDealerBlock
-) => {
-  setMaze(buildMaze())
-  
-    setPlayerScore(0);
-    setDealerScore(0);
-    setPlayerBlock(<></>);
-    setDealerBlock(<></>);
-};
+import { buildMaze } from "./gameMethods/buildMaze";
+import { drawCard } from "./gameMethods/drawCard";
+import { startGame } from "./gameMethods/startGame";
+import { setBlocks } from "./gameMethods/setBlocks";
+import { updateDealerScore } from "./gameMethods/updateDealerScore";
+import { updatePlayerScore } from "./gameMethods/updatePlayerScore";
+import { Dealer } from "./Components/Dealer";
 
 function App() {
   const [maze, setMaze] = useState();
@@ -25,46 +14,14 @@ function App() {
   const [dealerScore, setDealerScore] = useState(0);
   const [playerBlock, setPlayerBlock] = useState(<></>);
   const [dealerBlock, setDealerBlock] = useState(<></>);
-
-
-  const setBlocks = (winner, setWinnerBlock, loser, setLoserBlock) => {
-    setWinnerBlock(() => {
-      return <h1>{winner} Wins!</h1>;
-    });
-    setLoserBlock(() => {
-      return <h1>{loser} Loses!</h1>;
-    });
-  };
-
-
-  const updatePlayerScore = (maze, setMaze) => {
-    const card = drawCard(maze, setMaze);
-    setPlayerScore(()=>{
-      if (playerScore + card.value <= 21 ){
-      return playerScore + card.value;
-      } else{
-        setBlocks("Dealer", setDealerBlock, "Player", setPlayerBlock)
-        return playerScore + card.value;
-      }
-    }
-    
-  )};
-
-    useEffect(() => {
-      
-     
-    },[dealerScore])
-
-  const updateDealerScore = (maze, setMaze) => {
-      const card = drawCard(maze,setMaze);
-      setDealerScore(dealerScore + card.value);
-  };
-
+  const [gameButtons, setGameButtons] = useState(false);
+  const dealerScoreRef = useRef(0);
 
   return (
     <div className="App">
       <h1 className="title">Black Jack 21 </h1>
       <button
+        disabled={gameButtons}
         onClick={() =>
           startGame(
             setMaze,
@@ -72,25 +29,57 @@ function App() {
             setPlayerScore,
             setDealerScore,
             setPlayerBlock,
-            setDealerBlock
+            setDealerBlock,
+            dealerScoreRef,
+            setGameButtons
           )
         }
       >
         New Game
       </button>
-      <button onClick={() => {
-        updatePlayerScore(maze, setMaze)
-      }}>
+      <button
+        disabled={!gameButtons}
+        onClick={() => {
+          updatePlayerScore(
+            maze,
+            setMaze,
+            drawCard,
+            setPlayerScore,
+            playerScore,
+            dealerScore,
+            setBlocks,
+            setDealerBlock,
+            setPlayerBlock
+          );
+        }}
+      >
         Draw Card
       </button>
       <h2>Player</h2>
       <>{playerScore}</>
       <>{playerBlock}</>
       <h2>Dealer</h2>
-      <>{dealerScore}</>
+      <Dealer score={dealerScore}></Dealer>
       <>{dealerBlock}</>
-      <h2>Make dealer play</h2>
-      <button onClick={()=>updateDealerScore(maze,setMaze)}></button>
+
+      <button
+        disabled={!gameButtons}
+        onClick={() => {
+          setGameButtons(false);
+          updateDealerScore(
+            setDealerScore,
+            setBlocks,
+            dealerScoreRef,
+            maze,
+            setMaze,
+            playerScore,
+            setPlayerBlock,
+            setDealerBlock
+          );
+        }}
+      >
+        Make Dealer Play
+      </button>
     </div>
   );
 }
