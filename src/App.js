@@ -20,7 +20,8 @@ function App() {
   return (
     <div className="App">
       <h1 className="title">Black Jack 21 </h1>
-      <button
+      <div className="play-area">
+      <button className="New_btn"
         disabled={gameButtons}
         onClick={() =>
           startGame(
@@ -37,7 +38,10 @@ function App() {
       >
         New Game
       </button>
-      <button
+
+      {/* USER CLICKABLE BUTTONS */}
+      <div className="game_btns">
+      <button className="draw_btn"
         disabled={!gameButtons}
         onClick={() => {
           updatePlayerScore(
@@ -55,14 +59,7 @@ function App() {
       >
         Draw Card
       </button>
-      <h2>Player</h2>
-      <>{playerScore}</>
-      <>{playerBlock}</>
-      <h2>Dealer</h2>
-      <Dealer score={dealerScore}></Dealer>
-      <>{dealerBlock}</>
-
-      <button
+      <button className="stand_btn"
         disabled={!gameButtons}
         onClick={() => {
           setGameButtons(false);
@@ -78,8 +75,20 @@ function App() {
           );
         }}
       >
-        Make Dealer Play
+        Stand
       </button>
+      </div> {/* END OF USER CLICKABLE BUTTONS */} 
+      
+      {/* PLAY AREA */}
+      <h2 className="player_title">Player</h2>
+      <>{playerScore}</>
+      <>{playerBlock}</>
+      <h2 className="dealer_title">Dealer</h2>
+      <Dealer score={dealerScore}></Dealer>
+      <>{dealerBlock}</> {/* END OF PLAY AREA */}
+
+
+      </div>
     </div>
   );
 }

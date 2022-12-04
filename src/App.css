@@ -4,5 +4,75 @@
     justify-content: center;
     align-items: center;
     color: white;
-
 }
+
+.play-area{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.New_btn{
+    margin-top: 15px;
+    margin-bottom: 25px;
+    width: 120px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: orange;
+    border: orangered;
+    font-size: larger;
+    font-style: italic;
+}
+
+.game_btns{
+    display: block;
+    flex-direction: column;
+}
+
+.draw_btn{
+    margin-top: 15px;
+    margin-bottom: 25px;
+    width: 120px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: greenyellow;
+    border-color: forestgreen;
+    font-size: larger;
+    font-style: italic;
+    color: black;
+}
+
+.draw_btn:disabled{
+    opacity: 0.3;
+}
+
+.stand_btn{
+    margin-top: 15px;
+    margin-bottom: 25px;
+    width: 120px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: red;
+    border-color: brown;
+    font-size: larger;
+    font-style: italic;
+    margin-left: 20px;
+    color: black;
+}
+
+.stand_btn:disabled{
+    opacity: 0.3;
+}
+
+.player_title{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+}
+
+.dealer_title{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 30px;
+}
+
+
