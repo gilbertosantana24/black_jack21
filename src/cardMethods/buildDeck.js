@@ -20,7 +20,4 @@ function buildDeck(numOfDecks = 1, deck = []){
 
 }
 
-var deck = buildDeck()
-console.log(deck);
-
 module.exports = {buildDeck};
