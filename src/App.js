@@ -1,93 +1,78 @@
 import "./App.css";
-import { useState, useRef, useEffect } from "react";
-import { buildMaze } from "./gameMethods/buildMaze";
-import { drawCard } from "./gameMethods/drawCard";
-import { startGame } from "./gameMethods/startGame";
-import { setBlocks } from "./gameMethods/setBlocks";
-import { updateDealerScore } from "./gameMethods/updateDealerScore";
-import { updatePlayerScore } from "./gameMethods/updatePlayerScore";
+import { useState } from "react";
 import { Dealer } from "./Components/Dealer";
+import { Buttons } from "./Components/Buttons";
+import { Player } from "./Components/Player";
+import { drawCard } from "./gameMethods/drawCard";
+import { buildMaze } from "./gameMethods/buildMaze";
 
 function App() {
-  const [maze, setMaze] = useState();
+  const [maze, setMaze] = useState([
+    {
+      shape: "",
+      value: 0,
+    },
+  ]);
   const [playerScore, setPlayerScore] = useState(0);
   const [dealerScore, setDealerScore] = useState(0);
-  const [playerBlock, setPlayerBlock] = useState(<></>);
-  const [dealerBlock, setDealerBlock] = useState(<></>);
-  const [gameButtons, setGameButtons] = useState(false);
-  const dealerScoreRef = useRef(0);
+  const [playerResult, setPlayerResult] = useState("");
+  const [dealerResult, setDealerResult] = useState("");
+  const [lock, setLock] = useState(true);
+
+  const handleNewGame = () => {
+    //Build new maze
+    setMaze(buildMaze());
+    // Set the player and dealer score to 0
+    setDealerScore(0);
+    setPlayerScore(0);
+    // Erase the player and dealer result
+    setPlayerResult("");
+    setDealerResult("");
+    // Lock the buttons
+    setLock(false);
+  };
+
+  const handleDrawCard = () => {
+    //draw a card from maze
+    var card = drawCard(maze, setMaze);
+    // Add it to the player score
+    setPlayerScore((score) => {
+      return card.value + score;
+    });
+  };
+
+  //Placeholder from now
+  const handleStand = () => {
+    //Lock the buttons
+    setLock(true);
+
+    if (playerScore == dealerScore) {
+      setPlayerResult("Push!");
+    } else if (playerScore > dealerScore) {
+      setPlayerResult("Player Wins!");
+      setDealerResult("Dealer Lost");
+    } else {
+      setPlayerResult("You Lost");
+      setDealerResult("Dealer Wins");
+    }
+
+    setPlayerResult("You won");
+  };
 
   return (
     <div className="App">
       <h1 className="title">Black Jack 21 </h1>
       <div className="play-area">
-      <button className="New_btn"
-        disabled={gameButtons}
-        onClick={() =>
-          startGame(
-            setMaze,
-            buildMaze,
-            setPlayerScore,
-            setDealerScore,
-            setPlayerBlock,
-            setDealerBlock,
-            dealerScoreRef,
-            setGameButtons
-          )
-        }
-      >
-        New Game
-      </button>
+        <Buttons
+          lock={lock}
+          handleNewGame={handleNewGame}
+          handleDrawCard={handleDrawCard}
+          handleStand={handleStand}
+        />
+        <Dealer dealerScore={dealerScore} dealerResult={dealerResult} />
+        <Player playerScore={playerScore} playerResult={playerResult} />
 
-      {/* USER CLICKABLE BUTTONS */}
-      <div className="game_btns">
-      <button className="draw_btn"
-        disabled={!gameButtons}
-        onClick={() => {
-          updatePlayerScore(
-            maze,
-            setMaze,
-            drawCard,
-            setPlayerScore,
-            playerScore,
-            dealerScore,
-            setBlocks,
-            setDealerBlock,
-            setPlayerBlock
-          );
-        }}
-      >
-        Draw Card
-      </button>
-      <button className="stand_btn"
-        disabled={!gameButtons}
-        onClick={() => {
-          setGameButtons(false);
-          updateDealerScore(
-            setDealerScore,
-            setBlocks,
-            dealerScoreRef,
-            maze,
-            setMaze,
-            playerScore,
-            setPlayerBlock,
-            setDealerBlock
-          );
-        }}
-      >
-        Stand
-      </button>
-      </div> {/* END OF USER CLICKABLE BUTTONS */} 
-      
-      {/* PLAY AREA */}
-      <h2 className="player_title">Player</h2>
-      <>{playerScore}</>
-      <>{playerBlock}</>
-      <h2 className="dealer_title">Dealer</h2>
-      <Dealer score={dealerScore}></Dealer>
-      <>{dealerBlock}</> {/* END OF PLAY AREA */}
-
-
+        {/* END OF PLAY AREA */}
       </div>
     </div>
   );
