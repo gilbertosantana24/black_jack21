@@ -17,6 +17,7 @@ function App() {
   const [dealerScore, setDealerScore] = useState(0);
   const [playerResult, setPlayerResult] = useState("");
   const [dealerResult, setDealerResult] = useState("");
+  //Its true when we want to enable the new game button and disable the other ones
   const [lock, setLock] = useState(true);
 
   const handleNewGame = () => {
@@ -35,13 +36,21 @@ function App() {
   const handleDrawCard = () => {
     //draw a card from maze
     var card = drawCard(maze, setMaze);
+
+    //See if it passed 21
+    if(playerScore + card.value > 21){
+      //If it did, game ends and player loses
+      setPlayerResult("Player Busts");
+      setDealerResult("Dealer Wins");
+      setLock(true);
+    }
+
     // Add it to the player score
     setPlayerScore((score) => {
       return card.value + score;
     });
   };
 
-  //Placeholder from now
   const handleStand = () => {
     //Lock the buttons
     setLock(true);
