@@ -16,7 +16,7 @@ function App() {
   const [lock, setLock] = useState(true);
 
   //Get the first card for the dealer once we have a maze in place
-  useEffect(() => {
+   useEffect(() => {
     if (maze.length > 0 && dealerScore == 0) {
       //Draw a card for the dealer
       var card = drawCard(maze, setMaze);
@@ -24,6 +24,7 @@ function App() {
       setDealerScore(card.value);
     }
   }, [maze]);
+
 
   const handleNewGame = () => {
     //Build new maze
@@ -65,6 +66,7 @@ function App() {
     //Running dealer total
     var tot = dealerScore;
 
+
     //While the total is less than 17
     while (tot < 17) {
       //Draw a card
@@ -75,16 +77,19 @@ function App() {
       tot += card.value;
     }
 
+
     //Interval to update dealer score
     var intervalId = setInterval(() => {
       var card = dealerCards.pop();
       setDealerScore((score) => score + card);
       if (dealerCards.length == 0) {
+        handleResults(tot);
         window.clearInterval(intervalId);
       }
     }, 1000);
 
-    //See if dealer busted
+  const handleResults = (tot) =>{
+ //See if dealer busted
     if (tot > 21) {
       setPlayerResult("Player Wins!");
       setDealerResult("Dealer Busts");
@@ -98,6 +103,7 @@ function App() {
       setDealerResult("Dealer Wins");
     }
   };
+  }
 
   return (
     <div className="App">
