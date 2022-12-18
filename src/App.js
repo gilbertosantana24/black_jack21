@@ -16,12 +16,20 @@ function App() {
   const [lock, setLock] = useState(true);
 
   //Get the first card for the dealer once we have a maze in place
+  //Give a player 2 cards once we have a maze in place
    useEffect(() => {
     if (maze.length > 0 && dealerScore == 0) {
       //Draw a card for the dealer
       var card = drawCard(maze, setMaze);
       //Assign it to the dealer
       setDealerScore(card.value);
+
+      //Draw 2 cards for the player
+      var cardPlayer1 = drawCard(maze,setMaze);
+      var cardPlayer2 = drawCard(maze,setMaze);
+      //Assign them to the player
+      setPlayerScore(cardPlayer1.value + cardPlayer2.value);
+
     }
   }, [maze]);
 
@@ -65,7 +73,7 @@ function App() {
     var dealerCards = [];
     //Running dealer total
     var tot = dealerScore;
-
+    
 
     //While the total is less than 17
     while (tot < 17) {
@@ -76,12 +84,16 @@ function App() {
       //Add it to the running total
       tot += card.value;
     }
+ 
+    dealerCards.reverse();
 
 
     //Interval to update dealer score
     var intervalId = setInterval(() => {
       var card = dealerCards.pop();
-      setDealerScore((score) => score + card);
+      setDealerScore((score) => {
+        return score + card
+      });
       if (dealerCards.length == 0) {
         handleResults(tot);
         window.clearInterval(intervalId);
