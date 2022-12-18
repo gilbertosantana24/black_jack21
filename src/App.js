@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Dealer } from "./Components/Dealer";
 import { Buttons } from "./Components/Buttons";
 import { Player } from "./Components/Player";
@@ -15,16 +15,15 @@ function App() {
   //Its true when we want to enable the new game button and disable the other ones
   const [lock, setLock] = useState(true);
 
-
   //Get the first card for the dealer once we have a maze in place
-  useEffect(()=>{
-    if(maze.length > 0){
+  useEffect(() => {
+    if (maze.length > 0 && dealerScore == 0) {
       //Draw a card for the dealer
-      var card = drawCard(maze,setMaze);
+      var card = drawCard(maze, setMaze);
       //Assign it to the dealer
       setDealerScore(card.value);
     }
-  },[maze])
+  }, [maze]);
 
   const handleNewGame = () => {
     //Build new maze
@@ -62,9 +61,10 @@ function App() {
     setLock(true);
 
     //Get all the cards the dealer will receive
-    var dealerCards = [dealerScore];
+    var dealerCards = [];
     //Running dealer total
     var tot = dealerScore;
+
     //While the total is less than 17
     while (tot < 17) {
       //Draw a card
@@ -75,8 +75,14 @@ function App() {
       tot += card.value;
     }
 
-     //Set the dealer score to the total
-    setDealerScore(tot);
+    //Interval to update dealer score
+    var intervalId = setInterval(() => {
+      var card = dealerCards.pop();
+      setDealerScore((score) => score + card);
+      if (dealerCards.length == 0) {
+        window.clearInterval(intervalId);
+      }
+    }, 1000);
 
     //See if dealer busted
     if (tot > 21) {
@@ -91,7 +97,6 @@ function App() {
       setPlayerResult("You Lost");
       setDealerResult("Dealer Wins");
     }
-   
   };
 
   return (
