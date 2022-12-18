@@ -38,7 +38,7 @@ function App() {
     var card = drawCard(maze, setMaze);
 
     //See if it passed 21
-    if(playerScore + card.value > 21){
+    if (playerScore + card.value > 21) {
       //If it did, game ends and player loses
       setPlayerResult("Player Busts");
       setDealerResult("Dealer Wins");
@@ -55,17 +55,37 @@ function App() {
     //Lock the buttons
     setLock(true);
 
-    if (playerScore == dealerScore) {
+    //Get all the cards the dealer will receive
+    var dealerCards = [dealerScore];
+    //Running dealer total
+    var tot = dealerScore;
+    //While the total is less than 17
+    while (tot < 17) {
+      //Draw a card
+      const card = drawCard(maze, setMaze);
+      //Add it to the list
+      dealerCards.push(card.value);
+      //Add it to the running total
+      tot += card.value;
+    }
+
+     //Set the dealer score to the total
+    setDealerScore(tot);
+
+    //See if dealer busted
+    if (tot > 21) {
+      setPlayerResult("Player Wins!");
+      setDealerResult("Dealer Busts");
+    } else if (playerScore == tot) {
       setPlayerResult("Push!");
-    } else if (playerScore > dealerScore) {
+    } else if (playerScore > tot) {
       setPlayerResult("Player Wins!");
       setDealerResult("Dealer Lost");
     } else {
       setPlayerResult("You Lost");
       setDealerResult("Dealer Wins");
     }
-
-    setPlayerResult("You won");
+   
   };
 
   return (
