@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Dealer } from "./Components/Dealer";
 import { Buttons } from "./Components/Buttons";
 import { Player } from "./Components/Player";
@@ -7,18 +7,24 @@ import { drawCard } from "./gameMethods/drawCard";
 import { buildMaze } from "./gameMethods/buildMaze";
 
 function App() {
-  const [maze, setMaze] = useState([
-    {
-      shape: "",
-      value: 0,
-    },
-  ]);
+  const [maze, setMaze] = useState([]);
   const [playerScore, setPlayerScore] = useState(0);
   const [dealerScore, setDealerScore] = useState(0);
   const [playerResult, setPlayerResult] = useState("");
   const [dealerResult, setDealerResult] = useState("");
   //Its true when we want to enable the new game button and disable the other ones
   const [lock, setLock] = useState(true);
+
+
+  //Get the first card for the dealer once we have a maze in place
+  useEffect(()=>{
+    if(maze.length > 0){
+      //Draw a card for the dealer
+      var card = drawCard(maze,setMaze);
+      //Assign it to the dealer
+      setDealerScore(card.value);
+    }
+  },[maze])
 
   const handleNewGame = () => {
     //Build new maze
